@@ -5,79 +5,48 @@ import Nav from './Nav';
 
 export default function Gift() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const containerRef = useRef(null);
-  const activeLineRef = useRef(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef(null);
 
-  const letterLines = [
-    "¡Feliz cumpleaños, Lili! 💖",
-    "Hoy es un día sumamente especial para ti,",
-    "y me emociona mucho poder celebrarlo contigo.",
-    "Aunque apenas llevamos un mes de conocernos,",
-    "me encanta lo rápido que hicimos click para el dúo.",
-    "Desde que cruzamos caminos en el lobby de ML,",
-    "hasta las risas (y los sustos) en '99 noches en el bosque'.",
-    "Me encanta el drama que hacemos cuando uno es MVP,",
-    "nuestras indirectas sarcásticas y lo bien que nos entendemos.",
-    "Tus mensajes de 'buen dia, cómo amaneciste?'",
-    "y los 'descansa muchoo, cuídatee y sueuña bonitoo'",
-    "son de mis momentos favoritos, me alegran el día.",
-    "Eres una chica increíble, súper divertida y genial.",
-    "Gracias por esos buenos ratos y las risas,",
-    "y por dejarme ser parte de tu cumpleaños.",
-    "Deseo que este año te traiga muchísimas victorias,",
-    "cero lag en la vida, y que siempre seas muy feliz.",
-    "¡Te quiero mucho, mi dúo de confianza! 🎀"
-  ];
-
-  useEffect(() => {
-    let interval;
+  const togglePlay = () => {
     if (isPlaying) {
-      interval = setInterval(() => {
-        setCurrentLineIndex(prev => {
-          if (prev >= letterLines.length - 1) {
-            setIsPlaying(false);
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, 4000); // 4 segundos da más tiempo para leer textos largos
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, letterLines.length]);
-
-  // Hacer auto-scroll a la línea activa
-  useEffect(() => {
-    if (activeLineRef.current && containerRef.current) {
-      const container = containerRef.current;
-      const activeElement = activeLineRef.current;
-      container.scrollTo({
-        top: activeElement.offsetTop - container.offsetHeight / 2 + activeElement.offsetHeight / 2,
-        behavior: 'smooth'
-      });
-    }
-  }, [currentLineIndex]);
-
-  const togglePlay = () => setIsPlaying(!isPlaying);
-
-  const handleNext = () => {
-    if (currentLineIndex < letterLines.length - 1) {
-      setCurrentLineIndex(prev => prev + 1);
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current?.play().catch(e => console.log("Audio play failed:", e));
+      setIsPlaying(true);
     }
   };
 
+  const formatTime = (time) => {
+    if (isNaN(time)) return "0:00";
+    const min = Math.floor(time / 60);
+    const sec = Math.floor(time % 60);
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  // En un anuncio no puedes pasar a la siguiente canción, solo regresar al inicio
   const handlePrev = () => {
-    if (currentLineIndex > 0) {
-      setCurrentLineIndex(prev => prev - 1);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
     }
   };
-
-  // Calcula el progreso en porcentaje
-  const progress = (currentLineIndex / Math.max(1, letterLines.length - 1)) * 100;
 
   return (
     <div className="min-h-screen relative flex flex-col" style={{ background: 'linear-gradient(to bottom, #4a4a4a, #121212)' }}>
       <Nav backTo="/" />
+
+      {/* Etiqueta de audio oculta */}
+      <audio
+        ref={audioRef}
+        src="/cancion.mp3"
+        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+        onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+        onEnded={() => setIsPlaying(false)}
+      />
 
       <div className="flex-1 flex flex-col items-center p-4">
         {/* Banner gigante de Anuncio estilo Spotify Gratis */}
@@ -94,7 +63,7 @@ export default function Gift() {
 
           <div className="flex justify-between items-end mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-1">Un Mensaje para ti</h2>
+              <h2 className="text-2xl font-bold text-white mb-1">I Smoked Away My Brain</h2>
               <p className="text-[#b3b3b3] text-base">Tu Jungla Favorito</p>
             </div>
             <Heart className="w-6 h-6 text-[#1db954]" fill="#1db954" />
@@ -103,7 +72,7 @@ export default function Gift() {
           {/* Progress Bar */}
           <div className="mb-4 group cursor-pointer">
             <div className="flex justify-between items-center text-xs font-semibold mb-2">
-              <span className="text-[#a7a7a7]">0:15</span>
+              <span className="text-[#a7a7a7]">{formatTime(currentTime)}</span>
               <span className="bg-gray-700 text-white px-3 py-0.5 rounded text-[11px] tracking-widest border border-gray-500 shadow-xl">
                 PUBLICIDAD (No se puede saltar)
               </span>
@@ -134,7 +103,7 @@ export default function Gift() {
               >
                 {isPlaying ? <Pause className="w-8 h-8" fill="currentColor" /> : <Play className="w-8 h-8 ml-1" fill="currentColor" />}
               </button>
-              <button onClick={handleNext} className="text-white transition-colors opacity-50 cursor-not-allowed">
+              <button className="text-white transition-colors opacity-50 cursor-not-allowed">
                 {/* On ads, you can't really skip next easily */}
                 <SkipForward className="w-9 h-9" fill="currentColor" />
               </button>
@@ -156,30 +125,6 @@ export default function Gift() {
               ¡Haz click!
             </div>
           </div>
-
-          {/* Lyrics View */}
-          <div ref={containerRef} className="h-64 overflow-y-auto scrollbar-hide relative rounded-xl bg-black/60 p-5 flex flex-col items-start cursor-pointer transition-colors backdrop-blur-md border border-gray-800" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <div className="text-white font-black text-xs mb-6 uppercase tracking-wider opacity-80 w-full flex-shrink-0">
-              Transcripción del Anuncio
-            </div>
-            <div className="w-full flex flex-col gap-6 pb-32">
-              {letterLines.map((line, index) => (
-                <p
-                  key={index}
-                  ref={index === currentLineIndex ? activeLineRef : null}
-                  className={`w-full transition-all duration-500 font-bold ${index === currentLineIndex
-                      ? 'text-white text-[22px] opacity-100 drop-shadow-md scale-[1.02] origin-left'
-                      : 'text-gray-400 text-lg opacity-60'
-                    }`}
-                >
-                  <span className="leading-snug block">
-                    {line}
-                  </span>
-                </p>
-              ))}
-            </div>
-          </div>
-
         </div>
       </div>
     </div>

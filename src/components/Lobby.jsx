@@ -82,7 +82,7 @@ export default function Lobby() {
           <div className="glass-card bg-hk-pink/60 p-6 rounded-[2rem] flex flex-col items-center justify-center text-center h-full shadow-xl hover:bg-hk-pink/80 hover:scale-105 transition-all duration-300 ease-out border-[3px] border-white/50 box-glow overflow-hidden relative">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4zKSIvPjwvc3ZnPg==')] opacity-50"></div>
             <Gift className="w-14 h-14 text-white mb-4 group-hover:animate-bounce relative z-10 drop-shadow-md" />
-            <h3 className="font-heading text-3xl text-white mb-2 text-glow relative z-10">Sorpresa Final</h3>
+            {/* <h3 className="font-heading text-3xl text-white mb-2 text-glow relative z-10">Sorpresa Final</h3> */}
             <p className="text-sm text-white font-bold bg-hk-red/40 px-4 py-1.5 rounded-xl shadow-inner relative z-10">Tu regalo 💌</p>
           </div>
         </Link>
