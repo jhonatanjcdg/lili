@@ -3,28 +3,26 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { AnimatePresence, motion } from 'framer-motion';
 import Lobby from './components/Lobby';
 import Timeline from './components/Timeline';
-import Quiz from './components/Quiz';
 import Gift from './components/Gift';
 import Cake from './components/Cake';
-import Coupons from './components/Coupons';
-import Gallery from './components/Gallery';
+import AnimatedBackground from './components/AnimatedBackground';
 import { KittyFace, KittyBow } from './components/HelloKittyDecorations';
 
 function AnimatedRoutes() {
   const location = useLocation();
   
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+    <>
+      <AnimatedBackground />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Lobby />} />
         <Route path="/timeline" element={<Timeline />} />
-        <Route path="/quiz" element={<Quiz />} />
         <Route path="/gift" element={<Gift />} />
         <Route path="/cake" element={<Cake />} />
-        <Route path="/coupons" element={<Coupons />} />
-        <Route path="/gallery" element={<Gallery />} />
-      </Routes>
-    </AnimatePresence>
+        </Routes>
+      </AnimatePresence>
+    </>
   );
 }
 
