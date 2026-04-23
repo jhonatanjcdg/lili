@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  --color-hk-pink: #ff6b9d;
+  --color-hk-lightpink: #ffb6c1;
+  --color-hk-white: #ffffff;
+  --color-hk-black: #333333;
+  --color-hk-red: #ff3366;
+  --color-hk-bg: #fff0f5;
+  --font-sans: 'Nunito', 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Fredoka One', 'Nunito', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply text-hk-black font-sans m-0 p-0 overflow-x-hidden min-h-screen;
+    background: linear-gradient(-45deg, #fff0f5, #ffe4e1, #ffb6c1, #fff0f5);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    /* Cursor personalizado con un moño */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" style="font-size: 24px;"><text y="24">🎀</text></svg>'), auto;
+  }
+
+  /* Los botones también deben tener el cursor */
+  button, a, select, input {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" style="font-size: 24px;"><text y="24">💖</text></svg>'), pointer;
+  }
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 10px rgba(255, 107, 157, 0.6);
+  }
+  .box-glow {
+    box-shadow: 0 0 20px rgba(255, 107, 157, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+  /* Estilo Glassmorphism super premium */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px 0 rgba(255, 107, 157, 0.15);
+  }
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 12px 40px 0 rgba(255, 107, 157, 0.3);
+  }
+}
+
+/* Animations */
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.15); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.15); }
+  70% { transform: scale(1); }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 240, 245, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-hk-lightpink);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-hk-pink);
+}
